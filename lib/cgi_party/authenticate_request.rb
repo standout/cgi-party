@@ -1,5 +1,5 @@
 require "cgi_party/request"
-require "savon"
+require "cgi_party/order_response"
 
 module CGIParty
   class AuthenticateRequest
@@ -12,6 +12,10 @@ module CGIParty
     end
 
     private
+
+    def serialize_data(data)
+      CGIParty::OrderResponse.new(data)
+    end
 
     def message_hash
       {

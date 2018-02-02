@@ -1,7 +1,7 @@
 module CGIParty
   module Request
     def execute
-      @savon_client.call(action_name, message: message_hash)
+      serialize_data @savon_client.call(action_name, message: message_hash)
     end
 
     private

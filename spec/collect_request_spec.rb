@@ -40,5 +40,13 @@ RSpec.describe CGIParty::CollectRequest do
 
       subject.execute
     end
+
+    it "must return a collect response" do
+      savon.expects(:collect).with(message: :any).returns(response_xml)
+
+      result = subject.execute
+
+      expect(result).to be_an_instance_of(CGIParty::CollectResponse)
+    end
   end
 end

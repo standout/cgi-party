@@ -1,3 +1,4 @@
+require "cgi_party/collect_response"
 require "cgi_party/request"
 
 module CGIParty
@@ -12,6 +13,10 @@ module CGIParty
     end
 
     private
+
+    def serialize_data(data)
+      CGIParty::CollectResponse.new(data)
+    end
 
     def message_hash
       {

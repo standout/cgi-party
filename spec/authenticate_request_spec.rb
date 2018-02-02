@@ -17,7 +17,7 @@ RSpec.describe CGIParty::AuthenticateRequest do
     after(:all)  { savon.unmock! }
     let(:ssn) { "5907269129" }
     subject { CGIParty::AuthenticateRequest.new(CGIParty::Client.new.savon_client, ssn) }
-    let(:response_xml) { File.read("spec/fixtures/authenticate_response.xml")}
+    let(:response_xml) { File.read("spec/fixtures/authenticate_response.xml") }
 
     it "must call the appropiate soap action" do
       savon.expects(:authenticate).with(message: :any).returns(response_xml)
@@ -34,6 +34,14 @@ RSpec.describe CGIParty::AuthenticateRequest do
       }).returns(response_xml)
 
       subject.execute
+    end
+
+    it "must return an order response" do
+      savon.expects(:authenticate).with(message: :any).returns(response_xml)
+
+      result = subject.execute
+
+      expect(result).to be_an_instance_of(CGIParty::OrderResponse)
     end
   end
 end
