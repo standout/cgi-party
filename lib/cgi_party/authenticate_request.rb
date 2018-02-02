@@ -1,16 +1,14 @@
+require "cgi_party/request"
 require "savon"
 
 module CGIParty
   class AuthenticateRequest
+    include CGIParty::Request
     attr_reader :service_id, :display_name, :provider, :ssn
 
     def initialize(savon_client, ssn)
       @savon_client = savon_client
       @ssn = ssn
-    end
-
-    def execute
-      @savon_client.call(:authenticate, message: message_hash).body
     end
 
     private

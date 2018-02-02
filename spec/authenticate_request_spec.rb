@@ -1,14 +1,6 @@
 require "cgi_party/authenticate_request"
 
 RSpec.describe CGIParty::AuthenticateRequest do
-  before do
-    CGIParty.configure do |config|
-      config.display_name = "display_name"
-      config.service_id = "service_id"
-      config.provider = "provider"
-    end
-  end
-
   describe ".initialize" do
     let(:ssn) { "5907269129" }
     subject { CGIParty::AuthenticateRequest.new(CGIParty::Client.new.savon_client, ssn) }
