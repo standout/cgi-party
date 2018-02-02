@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Emric"]
   spec.email         = ["w.e.w@live.se"]
 
-  spec.summary       = %q{Makes CGI Group integration a party! <3}
+  spec.summary       = %q{Makes CGI Group GRP integration a party! <3}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
