@@ -1,3 +1,4 @@
+require "savon/mock/spec_helper"
 require "bundler/setup"
 require "cgi_party"
 
