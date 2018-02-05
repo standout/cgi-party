@@ -9,33 +9,31 @@ RSpec.describe CGIParty::Client do
       })
   end
 
-  describe "#poll_authentication" do
+  describe "#poll_collect" do
     include Savon::SpecHelper
 
     before { allow_any_instance_of(CGIParty::Client).to receive(:sleep) }
+    let(:order_ref) { "c87ebe55-0d1d-4d37-a5ed-c0b65f88c4e4" }
     let(:client) { CGIParty::Client.new }
-    let(:ssn) { "6405113090" }
     before(:all) { savon.mock! }
     after(:all) { savon.unmock! }
 
 
     it "must call authenticate and collect" do
-      savon.expects(:authenticate).with(message: :any).returns(File.read("spec/fixtures/authenticate_response.xml"))
       savon.expects(:collect).with(message: :any).returns(File.read("spec/fixtures/collect_response.xml"))
 
-      client.poll_authentication(ssn) {}
+      client.poll_collect(order_ref) {}
     end
 
     it "must timeout after 180 seconds of polling" do
-      savon.expects(:authenticate).with(message: :any).returns(File.read("spec/fixtures/authenticate_response.xml"))
+      expect(client).to receive(:collect).ordered.once # Initial collect
       expect(client).to receive(:polling_duration).and_return(180)
-      expect(client).to receive(:collect).never
+      expect(client).to receive(:collect).ordered.never
 
-      client.poll_authentication(ssn) {}
+      client.poll_collect(order_ref) {}
     end
 
     it "must call collect until authentication is considered finished" do
-      savon.expects(:authenticate).with(message: :any).returns(File.read("spec/fixtures/authenticate_response.xml"))
       expect(client).to receive(:collect).exactly(3).times
         .and_return(
           collect_response_with_status("OUTSTANDING_TRANSACTION"),
@@ -43,20 +41,10 @@ RSpec.describe CGIParty::Client do
           collect_response_with_status("COMPLETE")
         )
 
-      client.poll_authentication(ssn) {}
-    end
-
-    it "must wait 9 seconds before starting and 3 seconds between collect responses" do
-      savon.expects(:authenticate).with(message: :any).returns(File.read("spec/fixtures/authenticate_response.xml"))
-      expect(client).to receive(:sleep).ordered.with(9)
-      expect(client).to receive(:collect).ordered.and_return collect_response_with_status("COMPLETE")
-
-      client.poll_authentication(ssn) {}
+      client.poll_collect(order_ref) {}
     end
 
     it "must wait 3 seconds between each request" do
-      savon.expects(:authenticate).with(message: :any).returns(File.read("spec/fixtures/authenticate_response.xml"))
-      expect(client).to receive(:sleep).ordered.with(9)
       expect(client).to receive(:collect)
         .and_return(
           collect_response_with_status("OUTSTANDING_TRANSACTION"),
@@ -64,16 +52,16 @@ RSpec.describe CGIParty::Client do
         )
       expect(client).to receive(:sleep).ordered.with(3)
 
-      client.poll_authentication(ssn) {}
+      client.poll_collect(order_ref) {}
     end
 
     it "must yield a block with the current collect response status" do
-      savon.expects(:authenticate).with(message: :any).returns(File.read("spec/fixtures/authenticate_response.xml"))
-      expect(client).to receive(:collect).ordered.and_return collect_response_with_status("COMPLETE")
+      response = collect_response_with_status("COMPLETE")
+      expect(client).to receive(:collect).ordered.and_return response
 
       expect {|b|
-        client.poll_authentication(ssn, &b)
-      }.to yield_with_args("COMPLETE")
+        client.poll_collect(order_ref, &b)
+      }.to yield_with_args(response)
     end
   end
 

@@ -32,8 +32,15 @@ client.collect(order_ref, transaction_id) #<= Should only be called once every t
 #=> CGIParty::CollectResponse
 
 # Automatically calls authenticate and
-client.poll_authentication(social_security_number) do |status|
-  case status
+authenticate_response = client.authenticate
+#=> CGIParty::AuthenticateResponse
+
+authenticate_response.autostart_path
+#=> #<URI>
+
+client.poll_collect(authenticate_response.order_ref,
+                    authenticate_response.transaction_id) do |collect_response|
+  case collect_response.progress_status
   when "OUTSTANDING_TRANSACTION"
   when "NO_CLIENT"
   when "COMPLETE"
@@ -41,12 +48,11 @@ client.poll_authentication(social_security_number) do |status|
   when "EXPIRED_TRANSACTION"
   end
 end
+
+collect_response.attributes
+#=> [{ key: "name", value: "Gunnar" }]
 ```
 ## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
