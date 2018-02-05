@@ -25,9 +25,9 @@ RSpec.describe CGIParty::Client do
       client.poll_collect(order_ref) {}
     end
 
-    it "must timeout after 180 seconds of polling" do
+    it "must timeout" do
       expect(client).to receive(:collect).ordered.once # Initial collect
-      expect(client).to receive(:polling_duration).and_return(180)
+      expect(client).to receive(:polling_duration).and_return(CGIParty.config.collect_polling_timeout)
       expect(client).to receive(:collect).ordered.never
 
       client.poll_collect(order_ref) {}
@@ -44,13 +44,13 @@ RSpec.describe CGIParty::Client do
       client.poll_collect(order_ref) {}
     end
 
-    it "must wait 3 seconds between each request" do
+    it "must wait between each request" do
       expect(client).to receive(:collect)
         .and_return(
           collect_response_with_status("OUTSTANDING_TRANSACTION"),
           collect_response_with_status("COMPLETE")
         )
-      expect(client).to receive(:sleep).ordered.with(3)
+      expect(client).to receive(:sleep).ordered.with(CGIParty.config.collect_polling_delay)
 
       client.poll_collect(order_ref) {}
     end

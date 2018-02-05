@@ -15,8 +15,7 @@ RSpec.configure do |config|
 end
 
 CGIParty.configure do |config|
+  config.wsdl_path = CGIParty::WSDL_TEST_PATH
   config.display_name = "display_name"
   config.service_id = "service_id"
-  config.provider = "bankid"
-  config.wsdl_path = CGIParty::WSDL_TEST_PATH
 end
