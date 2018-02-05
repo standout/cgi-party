@@ -16,7 +16,7 @@ module CGIParty
         return collect_response if timeout_polling?
         yield(collect_response)
         return collect_response if collect_response.authentication_finished?
-        sleep(3)
+        sleep(CGIParty.config.collect_polling_delay)
       end
     end
 
@@ -35,7 +35,7 @@ module CGIParty
     private
 
     def timeout_polling?
-      polling_duration >= 180
+      polling_duration >= CGIParty.config.collect_polling_timeout
     end
 
     def savon_opts

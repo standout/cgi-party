@@ -15,16 +15,20 @@ module CGIParty
   end
 
   class Configuration
-    attr_accessor :service_id
+    attr_accessor :collect_polling_timeout
+    attr_accessor :collect_polling_delay
     attr_accessor :display_name
-    attr_accessor :provider
+    attr_accessor :service_id
     attr_accessor :wsdl_path
+    attr_accessor :provider
 
     def initialize
-      @service_id = "service_id"
+      @collect_polling_timeout = 180
       @display_name = "display_name"
-      @provider = "bankid"
+      @collect_polling_delay = 3
+      @service_id = "service_id"
       @wsdl_path = WSDL_PATH
+      @provider = "bankid"
     end
   end
 end

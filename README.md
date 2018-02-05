@@ -31,11 +31,10 @@ client.authenticate(social_security_number)
 client.collect(order_ref, transaction_id) #<= Should only be called once every three seconds
 #=> CGIParty::CollectResponse
 
-# Automatically calls authenticate and
 authenticate_response = client.authenticate
 #=> CGIParty::AuthenticateResponse
 
-authenticate_response.autostart_path
+authenticate_response.autostart_url
 #=> #<URI>
 
 client.poll_collect(authenticate_response.order_ref,
