@@ -50,7 +50,7 @@ module CGIParty
       {
         namespace: CGIParty::WSDL_NAMESPACE,
         namespace_identifier: :v1,
-        wsdl: CGIParty::WSDL_PATH,
+        wsdl: CGIParty.config.wsdl_path,
         env_namespace: :soapenv,
         ssl_verify_mode: :none
       }

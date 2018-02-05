@@ -18,4 +18,5 @@ CGIParty.configure do |config|
   config.display_name = "display_name"
   config.service_id = "service_id"
   config.provider = "bankid"
+  config.wsdl_path = CGIParty::WSDL_TEST_PATH
 end
