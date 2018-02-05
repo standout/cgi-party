@@ -25,11 +25,22 @@ TODO : Add application configuration
 ## Usage
 ```ruby
 client = CGIParty::Client.new(service_id: service_id)
-client.authenticate
+client.authenticate(social_security_number)
 #=> CGIParty::OrderResponse
 
-client.collect #<= Should only be called once every three seconds
+client.collect(order_ref, transaction_id) #<= Should only be called once every three seconds
 #=> CGIParty::CollectResponse
+
+# Automatically calls authenticate and
+client.poll_authentication(social_security_number) do |status|
+  case status
+  when "OUTSTANDING_TRANSACTION"
+  when "NO_CLIENT"
+  when "COMPLETE"
+  when "START_FAILED"
+  when "EXPIRED_TRANSACTION"
+  end
+end
 ```
 ## Development
 

@@ -17,5 +17,5 @@ end
 CGIParty.configure do |config|
   config.display_name = "display_name"
   config.service_id = "service_id"
-  config.provider = "provider"
+  config.provider = "bankid"
 end

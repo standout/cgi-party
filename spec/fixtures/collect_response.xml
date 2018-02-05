@@ -1,16 +1,8 @@
-<?xml version="1.0"?>
-
-<soap:Envelope
-xmlns:soap="http://www.w3.org/2003/05/soap-envelope/"
-soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
-
-<soap:Body>
-  <CollectResponse>
-    <transactionId>transactionId</transactionId>
-    <progressStatus>progressStatus</progressStatus>
-    <signature>signature</signature>
-    <attributes>attributes</attributes>
-  </CollectResponse>
-</soap:Body>
-
-</soap:Envelope>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:CollectResponse xmlns:ns2="http://funktionstjanster.se/grp/service/v1.0.0/">
+         <transactionId>e7a5c17c</transactionId>
+         <progressStatus>COMPLETE</progressStatus>
+      </ns2:CollectResponse>
+   </S:Body>
+</S:Envelope>

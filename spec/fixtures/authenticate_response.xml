@@ -1,15 +1,9 @@
-<?xml version="1.0"?>
-
-<soap:Envelope
-xmlns:soap="http://www.w3.org/2003/05/soap-envelope/"
-soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
-
-<soap:Body>
-  <OrderResponse>
-    <transactionId>transactionId</transactionId>
-    <orderRef>orderRef</orderRef>
-    <AutoStartToken>AutoStartToken</AutoStartToken>
-  </OrderResponse>
-</soap:Body>
-
-</soap:Envelope>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:AuthenticateResponse xmlns:ns2="http://funktionstjanster.se/grp/service/v1.0.0/">
+         <transactionId>e7a5c17c</transactionId>
+         <orderRef>c87ebe55-0d1d-4d37-a5ed-c0b65f88c4e4</orderRef>
+         <AutoStartToken>45216ad0-320a-4de5-b4a3-bac28de5c173</AutoStartToken>
+      </ns2:AuthenticateResponse>
+   </S:Body>
+</S:Envelope>

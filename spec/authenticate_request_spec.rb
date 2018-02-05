@@ -41,7 +41,7 @@ RSpec.describe CGIParty::AuthenticateRequest do
 
       result = subject.execute
 
-      expect(result).to be_an_instance_of(CGIParty::OrderResponse)
+      expect(result).to be_an_instance_of(CGIParty::AuthenticateResponse)
     end
   end
 end

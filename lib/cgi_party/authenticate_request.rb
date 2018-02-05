@@ -1,5 +1,5 @@
+require "cgi_party/authenticate_response"
 require "cgi_party/request"
-require "cgi_party/order_response"
 
 module CGIParty
   class AuthenticateRequest
@@ -14,7 +14,7 @@ module CGIParty
     private
 
     def serialize_data(data)
-      CGIParty::OrderResponse.new(data)
+      CGIParty::AuthenticateResponse.new(data)
     end
 
     def message_hash
