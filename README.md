@@ -1,8 +1,8 @@
 # CGIParty
 CGIParty is a gem made for integrating against the CGI Group GRP API.
-As of now you can only perform bankid authorisation.
+As of now you can only perform BankID authorisation.
 
-- *You will need a agreement with CGI group in order to user their API. We do not provide this.*
+- *You will need an agreement with CGI group in order to user their API. We do not provide this.*
 
 ## Installation
 
@@ -28,16 +28,16 @@ CGIParty.configure do |config|
   # (Optional) The number of seconds a poll operation will be active before timeout. Recommended is 180 seconds.
   config.collect_polling_timeout = 180
 
-  # (Optional) The number of seconds a poll operation will wait between each call. Recommended 3 seconds.
+  # (Optional) The number of seconds a poll operation will wait between each call. Recommended is 3 seconds.
   config.collect_polling_delay = 3
 
-  # (Optional) The path where the WSDL is located. Change to CGIParty::TEST_PATH in development and testing
+  # (Optional) The path where the WSDL is located. Change to CGIParty::WSDL_TEST_PATH in development and testing
   config.wsdl_path = CGIParty::WSDL_PATH
 
   # (Required) The name that will be displayed in the BankID app. "Jag legitimerar mig mot #{display_name}"
   config.display_name = "display_name"
 
-  # (Required) An identifier for your service provided by CGI Group
+  # (Required) An identifier for your service provided by the CGI Group
   config.service_id = "service_id"
 end
 ```
@@ -47,7 +47,7 @@ Before doing any consecutive requests you must first initiate a client and call
 the authenticate method. The authenticate response will contain information about
 the authentication order.
 ```ruby
-client = CGIParty.client
+client = CGIParty::Client.new
 authenticate_response = client.authenticate(social_security_number)
 ```
 

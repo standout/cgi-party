@@ -7,10 +7,6 @@ require "cgi_party/client"
 module CGIParty
   class << self
     attr_accessor :config
-
-    def client
-      CGIParty::Client.new
-    end
   end
 
   def self.configure
