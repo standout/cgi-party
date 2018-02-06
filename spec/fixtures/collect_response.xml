@@ -1,0 +1,8 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:CollectResponse xmlns:ns2="http://funktionstjanster.se/grp/service/v1.0.0/">
+         <transactionId>e7a5c17c</transactionId>
+         <progressStatus>COMPLETE</progressStatus>
+      </ns2:CollectResponse>
+   </S:Body>
+</S:Envelope>

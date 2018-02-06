@@ -1,5 +1,8 @@
+require "savon/mock/spec_helper"
 require "bundler/setup"
 require "cgi_party"
+require "timecop"
+
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -11,4 +14,10 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+end
+
+CGIParty.configure do |config|
+  config.wsdl_path = CGIParty::WSDL_TEST_PATH
+  config.display_name = "display_name"
+  config.service_id = "service_id"
 end

@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Emric"]
   spec.email         = ["w.e.w@live.se"]
 
-  spec.summary       = %q{Makes CGI Group integration a party! <3}
+  spec.summary       = %q{Makes CGI Group GRP integration a party! <3}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
@@ -29,7 +29,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "savon", "~> 2.0"
+
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "pry"
+  spec.add_development_dependency "timecop"
 end
