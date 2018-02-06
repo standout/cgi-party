@@ -12,13 +12,17 @@ module CGIParty
     end
 
     def respond_to_missing?(method_name, include_private = false)
-      fetch_value(method_name) || super
+      key_present?(method_name) || super
     end
 
     private
 
     def fetch_value(key)
       @source_data.values.first.fetch(key.to_sym, nil)
+    end
+
+    def key_present?(key)
+      @source_data.values.first.key?(key)
     end
   end
 end
