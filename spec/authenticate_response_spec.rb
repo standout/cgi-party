@@ -37,7 +37,7 @@ RSpec.describe CGIParty::AuthenticateResponse do
       expect(subject).to include authenticate_response.auto_start_token
     end
 
-    it "must use the provided return url in the query parameterss" do
+    it "must use the provided return url in the query parameters" do
       expect(subject).to include return_url
     end
   end

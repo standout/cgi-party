@@ -1,6 +1,8 @@
 require "savon/mock/spec_helper"
 require "bundler/setup"
 require "cgi_party"
+require "timecop"
+
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

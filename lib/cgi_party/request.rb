@@ -1,8 +1,8 @@
 module CGIParty
   class Request
     def initialize(savon_client, options)
-      @savon_client = savon_client
       @options = fetch_options(options, available_options)
+      @savon_client = savon_client
     end
 
     def execute

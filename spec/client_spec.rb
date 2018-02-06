@@ -1,61 +1,60 @@
 RSpec.describe CGIParty::Client do
-  def collect_response_with_status(status)
-    CGIParty::CollectResponse.new(
-      {
-        collect_response: {
-          transaction_id: "transaction_id",
-          progress_status: status
-        }
-      })
-  end
-
   describe "#poll_collect" do
-    include Savon::SpecHelper
-
-    before { allow_any_instance_of(CGIParty::Client).to receive(:sleep) }
     let(:order_ref) { "c87ebe55-0d1d-4d37-a5ed-c0b65f88c4e4" }
-    let(:client) { CGIParty::Client.new }
-    before(:all) { savon.mock! }
-    after(:all) { savon.unmock! }
+    before { allow_any_instance_of(CGIParty::Client).to receive(:sleep) }
 
 
-    it "must call authenticate and collect" do
-      savon.expects(:collect).with(message: :any).returns(File.read("spec/fixtures/collect_response.xml"))
+    it "calls collect" do
+      client = CGIParty::Client.new
+      response = CGIParty::CollectResponse.new({ collect_response: { progress_status: "COMPLETE"} })
+      allow(client).to receive(:collect).and_return(response)
 
       client.poll_collect(order_ref) {}
+
+      expect(client).to have_received(:collect)
     end
 
     it "must timeout" do
-      expect(client).to receive(:collect).ordered.once # Initial collect
-      expect(client).to receive(:polling_duration).and_return(CGIParty.config.collect_polling_timeout)
-      expect(client).to receive(:collect).ordered.never
+      client = CGIParty::Client.new
+      response = CGIParty::CollectResponse.new({ collect_response: { progress_status: "COMPLETE"} })
+      allow(client).to receive(:collect).and_return(response)
 
-      client.poll_collect(order_ref) {}
+      client.poll_collect(order_ref) do
+        # Makes the first collect action 180 seconds long
+        Timecop.travel Time.now + 180
+      end
+
+      expect(client).to have_received(:collect).once
     end
 
-    it "must call collect until authentication is considered finished" do
-      expect(client).to receive(:collect).exactly(3).times
-        .and_return(
+    it "calls collect until authentication is considered finished" do
+      client = CGIParty::Client.new
+      allow(client).to receive(:collect).and_return(
           collect_response_with_status("OUTSTANDING_TRANSACTION"),
           collect_response_with_status("USER_SIGN"),
           collect_response_with_status("COMPLETE")
-        )
+      )
 
       client.poll_collect(order_ref) {}
+
+      expect(client).to have_received(:collect).exactly(3).times
     end
 
     it "must wait between each request" do
-      expect(client).to receive(:collect)
+      client = CGIParty::Client.new
+      allow(client).to receive(:collect)
         .and_return(
           collect_response_with_status("OUTSTANDING_TRANSACTION"),
           collect_response_with_status("COMPLETE")
         )
-      expect(client).to receive(:sleep).ordered.with(CGIParty.config.collect_polling_delay)
 
       client.poll_collect(order_ref) {}
+
+      expect(client).to have_received(:sleep).with(CGIParty.config.collect_polling_delay).once
     end
 
-    it "must yield a block with the current collect response status" do
+    it "yields a block with the current collect response status" do
+      client = CGIParty::Client.new
       response = collect_response_with_status("COMPLETE")
       expect(client).to receive(:collect).ordered.and_return response
 
@@ -65,25 +64,13 @@ RSpec.describe CGIParty::Client do
     end
   end
 
-  describe "#authenticate" do
-    let(:client) { CGIParty::Client.new }
-
-    it "must do an authenticate request" do
-      expect_any_instance_of(CGIParty::AuthenticateRequest)
-        .to receive(:execute).and_return({})
-
-      client.authenticate("6405113090")
-    end
-  end
-
-  describe "#collect" do
-    let(:client) { CGIParty::Client.new }
-
-    it "must do a collect request" do
-      expect_any_instance_of(CGIParty::CollectRequest)
-        .to receive(:execute).and_return({})
-
-      client.collect("order_reference", "transaction_id")
-    end
+  def collect_response_with_status(status)
+    CGIParty::CollectResponse.new(
+      {
+        collect_response: {
+          transaction_id: "transaction_id",
+          progress_status: status
+        }
+      })
   end
 end
