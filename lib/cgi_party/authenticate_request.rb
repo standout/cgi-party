@@ -2,16 +2,19 @@ require "cgi_party/authenticate_response"
 require "cgi_party/request"
 
 module CGIParty
-  class AuthenticateRequest
-    include CGIParty::Request
+  class AuthenticateRequest < CGIParty::Request
     attr_reader :service_id, :display_name, :provider, :ssn
 
-    def initialize(savon_client, ssn)
-      @savon_client = savon_client
+    def initialize(savon_client, ssn, options: {})
+      super(savon_client, options)
       @ssn = ssn
     end
 
     private
+
+    def available_options
+      %i[display_name provider service_id]
+    end
 
     def serialize_data(data)
       CGIParty::AuthenticateResponse.new(data)
@@ -19,9 +22,9 @@ module CGIParty
 
     def message_hash
       {
-        display_name: CGIParty.config.display_name,
-        provider: CGIParty.config.provider,
-        policy: CGIParty.config.service_id,
+        display_name: @options[:display_name],
+        provider: @options[:provider],
+        policy: @options[:service_id],
         personal_number: @ssn
       }
     end

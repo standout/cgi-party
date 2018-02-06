@@ -24,11 +24,11 @@ module CGIParty
       Time.now - @polling_started_at
     end
 
-    def authenticate(ssn)
+    def authenticate(ssn, options: {})
       CGIParty::AuthenticateRequest.new(@savon_client, ssn).execute
     end
 
-    def collect(order_reference, transaction_id)
+    def collect(order_reference, transaction_id, options: {})
       CGIParty::CollectRequest.new(@savon_client, order_reference, transaction_id).execute
     end
 

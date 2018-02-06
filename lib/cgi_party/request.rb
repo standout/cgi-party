@@ -1,5 +1,10 @@
 module CGIParty
-  module Request
+  class Request
+    def initialize(savon_client, options)
+      @savon_client = savon_client
+      @options = fetch_options(options, available_options)
+    end
+
     def execute
       serialize_data(
         @savon_client.call(
@@ -11,6 +16,13 @@ module CGIParty
     end
 
     private
+
+    def fetch_options(options, available_options)
+      available_options.each do |option_name|
+        options[option_name] ||= CGIParty.config.public_send(option_name)
+      end
+      options
+    end
 
     # Only works for single word actions
     def action_name
