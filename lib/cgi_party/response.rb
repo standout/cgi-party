@@ -8,7 +8,8 @@ module CGIParty
     end
 
     def method_missing(method_name, *args, &block)
-      fetch_value(method_name) || super
+      return fetch_value(method_name) if key_present?(method_name)
+      super
     end
 
     def respond_to_missing?(method_name, include_private = false)
