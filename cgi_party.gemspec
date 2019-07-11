@@ -6,8 +6,8 @@ require "cgi_party/version"
 Gem::Specification.new do |spec|
   spec.name          = "cgi_party"
   spec.version       = CGIParty::VERSION
-  spec.authors       = ["Emric"]
-  spec.email         = ["w.e.w@live.se"]
+  spec.authors       = ["Emric","Stavros"]
+  spec.email         = ["w.e.w@live.se","stavros.gemitzoglou@standout.se"]
 
   spec.summary       = %q{Makes CGI Group GRP integration a party! <3}
   spec.homepage      = "https://github.com/standout/cgi-party"

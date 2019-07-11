@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cgi_party (0.1.2)
+    cgi_party (1.0.0)
       savon (~> 2.0)
 
 GEM
