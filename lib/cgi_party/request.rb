@@ -1,8 +1,9 @@
 module CGIParty
   class Request
-    def initialize(savon_client, options)
+    def initialize(savon_client, ip_address, options)
       @options = fetch_options(options, available_options)
       @savon_client = savon_client
+      @ip_address = ip_address
     end
 
     def execute
@@ -21,6 +22,7 @@ module CGIParty
       available_options.each do |option_name|
         options[option_name] ||= CGIParty.config.public_send(option_name)
       end
+
       options
     end
 
@@ -31,6 +33,13 @@ module CGIParty
 
     def message_tag
       self.class.name.gsub(/^.*::/, '')
+    end
+
+    def end_user_info
+      {
+        type: 'IP_ADDR',
+        value: @ip_address
+      }
     end
   end
 end

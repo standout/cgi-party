@@ -1,6 +1,5 @@
 require "savon"
 
-
 module CGIParty
   class Client
     attr_reader :savon_client, :collect_responses, :polling_started_at
@@ -11,11 +10,14 @@ module CGIParty
 
     def poll_collect(order_ref, transaction_id = nil)
       @polling_started_at = Time.now
+
       loop do
         collect_response = collect(order_ref, transaction_id)
         return collect_response if timeout_polling?
+
         yield(collect_response)
         return collect_response if collect_response.authentication_finished?
+
         sleep(CGIParty.config.collect_polling_delay)
       end
     end
@@ -24,12 +26,21 @@ module CGIParty
       Time.now - @polling_started_at
     end
 
-    def authenticate(ssn, options: {})
-      CGIParty::AuthenticateRequest.new(@savon_client, ssn).execute
+    def authenticate(ssn, ip_address, options: {})
+      CGIParty::AuthenticateRequest.new(@savon_client,
+                                        ssn,
+                                        ip_address,
+                                        options: options)
+                                   .execute
     end
 
-    def collect(order_reference, transaction_id, options: {})
-      CGIParty::CollectRequest.new(@savon_client, order_reference, transaction_id).execute
+    def collect(order_reference, transaction_id, ip_address, options: {})
+      CGIParty::CollectRequest.new(@savon_client,
+                                   order_reference,
+                                   ip_address,
+                                   transaction_id,
+                                   options: options)
+                              .execute
     end
 
     private
