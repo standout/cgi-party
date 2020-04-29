@@ -1,11 +1,16 @@
 require "cgi_party/authenticate_request"
 
 RSpec.describe CGIParty::AuthenticateRequest do
+  let(:ip_address) { '127.0.0.1' }
+
   describe ".initialize" do
     it "sets ssn" do
       ssn = "5907269129"
 
-      request = CGIParty::AuthenticateRequest.new(CGIParty::Client.new.savon_client, ssn)
+      request =
+        CGIParty::AuthenticateRequest.new(CGIParty::Client.new.savon_client,
+                                          ssn,
+                                          ip_address)
 
       expect(request.ssn).to eq ssn
     end
@@ -14,10 +19,10 @@ RSpec.describe CGIParty::AuthenticateRequest do
   describe "#execute" do
     include Savon::SpecHelper
 
-    it "calls the appropiate soap action" do
+    it "calls the appropriate soap action" do
       ssn = "5907269129"
       savon_client = spy("savon_client")
-      request = CGIParty::AuthenticateRequest.new(savon_client, ssn)
+      request = CGIParty::AuthenticateRequest.new(savon_client, ssn, ip_address)
 
       request.execute
 
@@ -27,7 +32,7 @@ RSpec.describe CGIParty::AuthenticateRequest do
     it "provides the necessary details" do
       ssn = "5907269129"
       savon_client = spy("savon_client")
-      request = CGIParty::AuthenticateRequest.new(savon_client, ssn)
+      request = CGIParty::AuthenticateRequest.new(savon_client, ssn, ip_address)
 
       request.execute
 
@@ -37,7 +42,11 @@ RSpec.describe CGIParty::AuthenticateRequest do
           display_name: CGIParty.config.display_name,
           provider: CGIParty.config.provider,
           policy: CGIParty.config.service_id,
-          personal_number: ssn
+          end_user_info: {
+            type: 'IP_ADDR',
+            value: '127.0.0.1'
+          },
+          personal_number: ssn,
         }, message_tag: "AuthenticateRequest"
       )
     end
@@ -46,7 +55,7 @@ RSpec.describe CGIParty::AuthenticateRequest do
       savon.mock!
       ssn = "5907269129"
       savon_client = CGIParty::Client.new.savon_client
-      request = CGIParty::AuthenticateRequest.new(savon_client, ssn)
+      request = CGIParty::AuthenticateRequest.new(savon_client, ssn, ip_address)
       response_xml = File.read("spec/fixtures/authenticate_response.xml")
       savon.expects(:authenticate).with(message: :any).returns(response_xml)
 

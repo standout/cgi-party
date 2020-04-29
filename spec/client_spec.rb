@@ -58,9 +58,9 @@ RSpec.describe CGIParty::Client do
       response = collect_response_with_status("COMPLETE")
       expect(client).to receive(:collect).ordered.and_return response
 
-      expect {|b|
+      expect do |b|
         client.poll_collect(order_ref, &b)
-      }.to yield_with_args(response)
+      end.to yield_with_args(response)
     end
   end
 
@@ -71,6 +71,7 @@ RSpec.describe CGIParty::Client do
           transaction_id: "transaction_id",
           progress_status: status
         }
-      })
+      }
+    )
   end
 end

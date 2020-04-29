@@ -5,8 +5,9 @@ module CGIParty
   class CollectRequest < CGIParty::Request
     attr_reader :order_reference, :transaction_id
 
-    def initialize(savon_client, order_reference, transaction_id = nil, options: {})
-      super(savon_client, options)
+    def initialize(savon_client, order_reference, ip_address,
+                   transaction_id = nil, options: {})
+      super(savon_client, ip_address, options)
       @order_reference = order_reference
       @transaction_id = transaction_id
     end
@@ -25,6 +26,7 @@ module CGIParty
       {
         display_name: @options[:display_name],
         policy: @options[:service_id],
+        end_user_info: end_user_info,
         transaction_id: @transaction_id,
         order_ref: @order_reference
       }

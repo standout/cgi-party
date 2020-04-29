@@ -5,8 +5,8 @@ module CGIParty
   class AuthenticateRequest < CGIParty::Request
     attr_reader :service_id, :display_name, :provider, :ssn
 
-    def initialize(savon_client, ssn, options: {})
-      super(savon_client, options)
+    def initialize(savon_client, ssn, ip_address, options: {})
+      super(savon_client, ip_address, options)
       @ssn = ssn
     end
 
@@ -25,6 +25,7 @@ module CGIParty
         display_name: @options[:display_name],
         provider: @options[:provider],
         policy: @options[:service_id],
+        end_user_info: end_user_info,
         personal_number: @ssn
       }
     end
