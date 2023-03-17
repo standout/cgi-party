@@ -3,11 +3,10 @@ require "cgi_party/request"
 
 module CGIParty
   class AuthenticateRequest < CGIParty::Request
-    attr_reader :service_id, :display_name, :provider, :ssn
+    attr_reader :service_id, :display_name, :provider
 
-    def initialize(savon_client, ssn, ip_address, options: {})
+    def initialize(savon_client, ip_address, options: {})
       super(savon_client, ip_address, options)
-      @ssn = ssn
     end
 
     private
@@ -22,11 +21,10 @@ module CGIParty
 
     def message_hash
       {
-        display_name: @options[:display_name],
-        provider: @options[:provider],
         policy: @options[:service_id],
-        end_user_info: end_user_info,
-        personal_number: @ssn
+        provider: @options[:provider],
+        rp_display_name: @options[:display_name],
+        end_user_info: end_user_info
       }
     end
   end
