@@ -5,9 +5,9 @@ module CGIParty
   class CollectRequest < CGIParty::Request
     attr_reader :order_reference, :transaction_id
 
-    def initialize(savon_client, order_reference, ip_address,
+    def initialize(savon_client, order_reference,
                    transaction_id = nil, options: {})
-      super(savon_client, ip_address, options)
+      super(savon_client, options)
       @order_reference = order_reference
       @transaction_id = transaction_id
     end
@@ -19,14 +19,14 @@ module CGIParty
     end
 
     def available_options
-      %i[display_name service_id]
+      %i[display_name service_id provider]
     end
 
     def message_hash
       {
-        display_name: @options[:display_name],
         policy: @options[:service_id],
-        end_user_info: end_user_info,
+        provider: @options[:provider],
+        rp_display_name: @options[:display_name],
         transaction_id: @transaction_id,
         order_ref: @order_reference
       }

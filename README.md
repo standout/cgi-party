@@ -1,8 +1,10 @@
 # CGIParty
-CGIParty is a gem made for integrating against the CGI Group GRP API.
-As of now you can only perform BankID authorisation.
+CGIParty is a gem made for integrating against the CGI Group GRP2 API.
+As of now you can only perform BankID authorization.
 
 - *You will need an agreement with CGI group in order to user their API. We do not provide this.*
+
+**NOTE: If you're still using the old GRP API, you'll need to install the old version ([1.0.0](https://github.com/standout/cgi-party/tree/v1.0.0)) of this gem.**
 
 ## Installation
 
@@ -48,15 +50,24 @@ the authenticate method. The authenticate response will contain information abou
 the authentication order.
 ```ruby
 client = CGIParty::Client.new
-authenticate_response = client.authenticate(social_security_number)
+authenticate_response = client.authenticate(ip_address)
 ```
-
+### Autostart on the same device
 You can acquire an url for prompting the BankID application on the device.
 ```ruby
 authenticate_response.autostart_url(return_url)
-#=> "bankid:///?autostarttoken=[token]&redirect=[return_url]"
+#=> "bankid:///?autostart=[token]&return=[return_url]"
 ```
 
+### QR code for BankID on another device
+Generate an animated QR code. You'll need some way to keep track of elapsed seconds as you refresh the QR code.
+```ruby
+client.generate_qr(start_token: authenticate_response.qr_start_token,
+                   start_secret: authenticate_response.qr_start_secret,
+                   seconds: seconds_elapsed)
+```
+
+### Collect
 To poll the collect action you can use the poll collect method. The block will be yielded
 every time the API responds. You can take appropriate action in your application by using the provided
 progress statuses.

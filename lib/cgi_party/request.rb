@@ -1,19 +1,14 @@
 module CGIParty
   class Request
-    def initialize(savon_client, ip_address, options)
+    def initialize(savon_client, ip_address = nil, options)
       @options = fetch_options(options, available_options)
       @savon_client = savon_client
       @ip_address = ip_address
     end
 
     def execute
-      serialize_data(
-        @savon_client.call(
-          action_name,
-          message: message_hash,
-          message_tag: message_tag
-        ).body
-      )
+      response = @savon_client.call(action_name, message: message_hash, message_tag: message_tag, soap_action: false)
+      serialize_data(response.body)
     end
 
     private

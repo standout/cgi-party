@@ -1,4 +1,5 @@
 require "savon"
+require "rqrcode"
 
 module CGIParty
   class Client
@@ -26,18 +27,20 @@ module CGIParty
       Time.now - @polling_started_at
     end
 
-    def authenticate(ssn, ip_address, options: {})
+    def authenticate(ip_address, options: {})
       CGIParty::AuthenticateRequest.new(@savon_client,
-                                        ssn,
                                         ip_address,
                                         options: options)
                                    .execute
     end
 
-    def collect(order_reference, transaction_id, ip_address, options: {})
+    def generate_qr(start_token:, start_secret:, seconds:)
+      RQRCode::QRCode.new(qr_auth_code(start_token, start_secret, seconds))
+    end
+
+    def collect(order_reference, transaction_id, options: {})
       CGIParty::CollectRequest.new(@savon_client,
                                    order_reference,
-                                   ip_address,
                                    transaction_id,
                                    options: options)
                               .execute
@@ -49,10 +52,19 @@ module CGIParty
       polling_duration >= CGIParty.config.collect_polling_timeout
     end
 
+    def qr_auth_code(start_token, start_secret, seconds)
+      auth_code = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("SHA256"),
+                                          start_secret,
+                                          seconds.to_s)
+
+      "bankid.#{start_token}.#{seconds}.#{auth_code}"
+    end
+
     def savon_opts
       {
+        soap_version: 2,
         namespace: CGIParty::WSDL_NAMESPACE,
-        namespace_identifier: :v1,
+        namespace_identifier: :v2,
         wsdl: CGIParty.config.wsdl_path,
         env_namespace: :soapenv,
         ssl_verify_mode: :none
