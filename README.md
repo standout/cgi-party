@@ -56,7 +56,7 @@ authenticate_response = client.authenticate(ip_address)
 You can acquire an url for prompting the BankID application on the device.
 ```ruby
 authenticate_response.autostart_url(return_url)
-#=> "bankid:///?autostart=[token]&return=[return_url]"
+#=> "bankid:///?autostarttoken=[token]&redirect=[return_url]"
 ```
 
 ### QR code for BankID on another device
